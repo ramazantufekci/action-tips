@@ -17,7 +17,7 @@ jobs:
       - name: yeri göster
         run: ls -al .next/
       - name: Upload static site content
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
          name: static-site
          path: .next/
