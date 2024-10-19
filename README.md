@@ -277,6 +277,25 @@ jobs:
           
 
  ```     
-      
-      
+
+## Action Tip 10
+
+docker login işlemi:
+bunun için docker accontumuzdan bir token oluşturuyoruz read,write,delete daha sonra repository settings den secrets and variable -> actions -> repository secret altına kullanıcı ismi ve token ın tanımlamasını yapıyoruz.
+
+ ```yaml
+on: push
+jobs:
+  build-container:
+    name: Build container
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Login to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+ ```      
 
