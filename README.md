@@ -212,3 +212,71 @@ jobs:
         with:
           filename: site.zip
 ```
+
+## Action Tip 9
+
+release oluşturur ve sitenin çalışan halini zip olarak ekler.
+
+```yaml
+name: Build Next.js web application
+on: 
+  push:
+    branches:
+      - main
+jobs: 
+  build-project:
+    name: Build Project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install NPM dependencies
+        run: npm install
+      - name: Build project assets
+        run: npm run build
+      - name: yeri göster
+        run: ls -al .next/
+      - name: Upload static site content
+        uses: actions/upload-artifact@v4
+        with:
+         name: static-site
+         path: .next/
+         include-hidden-files: true
+  release-project:
+    name: Release project
+    runs-on: ubuntu-latest
+    needs: build-project
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: static-site
+      - name: Test artifact download
+        run: ls -R
+      - name: Archive site content
+        uses: thedoctor0/zip-release@master
+        with:
+          filename: site.zip
+      - name: Create Github release
+        id: create-new-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.run_number }}
+          release_name: Release ${{ github.run_number }}
+      - name: Upload release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-new-release.outputs.upload_url }}
+          asset_path: ./site.zip
+          asset_name: site-v${{ github.run_number }}.zip
+          asset_content_type: application/zip
+          
+
+ ```     
+      
+      
+
