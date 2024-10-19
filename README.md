@@ -93,3 +93,34 @@ jobs:
       - name: Build project assets
         run: npm run build
 ```
+
+## Action Tip 6
+
+nextjs branch ında upload artifact örneği  include-hidden-files bu propu true yapmadan dosyayı bulamıyorum hatası verdi.
+
+```yaml
+name: Build Next.js web application
+on: 
+  push:
+    branches:
+      - nextjs
+jobs: 
+  build-project:
+    name: Build Project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install NPM dependencies
+        run: npm install
+      - name: Build project assets
+        run: npm run build
+      - name: yeri göster
+        run: ls -al .next/
+      - name: Upload static site content
+        uses: actions/upload-artifact@v4
+        with:
+         name: static-site
+         path: .next/
+         include-hidden-files: true
+```
