@@ -124,3 +124,44 @@ jobs:
          path: .next/
          include-hidden-files: true
 ```
+
+## Action Tip 7
+
+nextjs branch ında download artifact örneği
+
+```yaml
+name: Build Next.js web application
+on: 
+  push:
+    branches:
+      - nextjs
+jobs: 
+  build-project:
+    name: Build Project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install NPM dependencies
+        run: npm install
+      - name: Build project assets
+        run: npm run build
+      - name: yeri göster
+        run: ls -al .next/
+      - name: Upload static site content
+        uses: actions/upload-artifact@v4
+        with:
+         name: static-site
+         path: .next/
+         include-hidden-files: true
+  release-project:
+    name: Release project
+    runs-on: ubuntu-latest
+    needs: build-project
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: static-site
+      - name: Test artifact download
+        run: ls -R
